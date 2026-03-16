@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>未来好転プログラム｜彩瀬みき</title>
+    <style>
+        /* 基本スタイル */
+        body { font-family: sans-serif; background-color: #fffafa; color: #333; margin: 0; padding: 10px; }
+        .card { max-width: 500px; margin: 20px auto; background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #ffe4e1; }
+        .header { background: #d63384; color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 18px; }
+        .content { padding: 20px; }
+        
+        /* ステップの切り替え（!importantで強制表示） */
+        .step { display: none; }
+        .step.active { display: block !important; }
+
+        /* 装飾 */
+        h2 { color: #d63384; font-size: 17px; border-left: 4px solid #d63384; padding-left: 10px; }
+        .highlight { background: #fff0f5; padding: 15px; border-radius: 10px; border: 1px dashed #d63384; margin: 15px 0; font-size: 14px; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 16px; background: #d63384; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: opacity 0.2s; }
+        button:hover { opacity: 0.9; }
+        .impact-num { font-size: 32px; font-weight: bold; color: #e74c3c; text-align: center; display: block; margin: 10px 0; }
+        .line-btn { display: block; background: #06C755; margin-top: 20px; text-align: center; text-decoration: none; padding: 16px; border-radius: 30px; color: white; font-weight: bold; font-size: 16px; transition: background 0.2s; }
+        .line-btn:hover { background: #05b34c; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <h1>未来好転プログラム</h1>
+    </div>
+
+    <div class="content">
+        <!-- Step 1 -->
+        <div id="step1" class="step active">
+            <h2>1. 現実は「思考の量」で決まる</h2>
+            <p>心のコップの「蓄積量」を計算しましょう。</p>
+            <p>1日の不満回数：<input type="number" id="freq" value="100"></p>
+            <p>悩んできた年数：<input type="number" id="yrs" value="10"></p>
+            <button onclick="calc()">計算する</button>
+            <div id="calc-res" style="display:none;">
+                <span class="impact-num" id="total-val">0回</span>
+                <div class="highlight">これが今の現実を創っている「思考の量」です。これだけの不満を脳にインプットしてきた結果が「今」なのです。</div>
+                <button onclick="next(2)">2. 脳のバグ体験へ</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="step2" class="step">
+            <h2>2. 脳は「主語」を理解できない</h2>
+            <p>夫や周囲への怒りを入力してください。</p>
+            <textarea id="anger" rows="3" placeholder="例：本当に気が利かない！"></textarea>
+            <button onclick="bug()">解析する</button>
+            <div id="bug-res" style="display:none;">
+                <div class="highlight">
+                    <p style="text-align:center; margin-top:0;">脳が受け取ったメッセージ：</p>
+                    <p id="trans-text" style="font-size:18px; font-weight:bold; color:#e74c3c; text-align:center; margin: 10px 0;"></p>
+                    <p style="font-size:12px; color:#555; text-align:center; margin-bottom:0;">潜在意識は主語を認識しません。相手に向けた暴言は、すべて「自分への攻撃」として蓄積されています。</p>
+                </div>
+                <button onclick="next(3)">3. 出し惜しみの呪いを解く</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="step3" class="step">
+            <h2>3. 愛されない理由は「自分」にあり</h2>
+            <p>自分をご機嫌にするために「今」やりたいことは？</p>
+            <input type="text" id="joy-item" placeholder="例：カフェでゆっくりする">
+            <select id="money-type" onchange="document.getElementById('p-check').style.display=(this.value=='paid')?'block':'none'">
+                <option value="free">お金はかからない</option>
+                <option value="paid">お金がかかる</option>
+            </select>
+            <div id="p-check" style="display:none;">
+                <p>それにお金を払う時の気持ちは？</p>
+                <select id="emotion">
+                    <option value="guilt">もったいない、減るのが怖い</option>
+                    <option value="thanks">嬉しい！自分のために使えて幸せ</option>
+                </select>
+            </div>
+            <button onclick="judge()">判定する</button>
+            <div id="joy-res" class="highlight" style="display:none;">
+                <p id="joy-msg" style="margin:0; font-weight:bold;"></p>
+                <button onclick="next(4)">確定した未来を見る</button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div id="step4" class="step">
+            <h2 style="text-align: center; font-size: 1.4rem; padding-bottom: 15px;">✨ 確定したあなたの未来 ✨</h2>
+            <p style="font-weight: bold; color: #d63384; font-size: 1.1rem; text-align: center; margin-bottom: 20px;">
+                ワークを終えた今、あなたの未来は<br>すでに書き換わり始めています！
+            </p>
+            <div class="highlight" style="background:white; line-height: 1.8; padding: 25px;">
+                「思考」の蓄積量に気づき、「言葉（主語）」が脳に与える影響を知り、自分への「出し惜しみ」をやめる許可を出せたあなたは、もう過去の苦しいループには戻りません。<br><br>
+                <strong style="color: #e74c3c; font-size: 1.1rem;">【これからあなたに訪れる変化】</strong><br>
+                🌸 <strong>心にブレない軸ができる：</strong><br>
+                相手の機嫌や言葉に振り回されず、常に安心感に包まれて過ごせるようになります。<br>
+                🌸 <strong>現実が優しく変わる：</strong><br>
+                自分が満たされることであなたの波動が変わり、自然とパートナーや周囲の態度も優しく変化し始めます。<br>
+                🌸 <strong>豊かさが巡り始める：</strong><br>
+                お金や時間を「自分への愛」として使えるようになり、さらなる豊かさが引き寄せられます。<br><br>
+                「自分が自分をどう扱うか」が、「相手があなたをどう扱うか」の答え合わせです。<br>
+                あなたが自分を世界一大切に扱い始めたとき、現実は驚くほどスムーズに、そして劇的に好転していきます。これからのあなたの人生は、もっと自由で、もっと愛に溢れた素晴らしいものになります！
+            </div>
+            <!-- 公式LINEのURLを適宜変更してください -->
+            <a href="https://lin.ee/xxxxxx" target="_blank" class="line-btn" style="line-height: 1.5; padding: 20px 16px;">
+                彩瀬みき公式LINEで<br>「未来を好転させる」<br>本格的なワークや情報を見る
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Step 1: 思考量の計算
+    function calc() {
+        const freq = parseInt(document.getElementById('freq').value) || 0;
+        const yrs = parseInt(document.getElementById('yrs').value) || 0;
+        const total = freq * 365 * yrs;
+        document.getElementById('total-val').innerText = total.toLocaleString() + '回';
+        document.getElementById('calc-res').style.display = 'block';
+    }
+
+    // ステップの切り替え
+    function next(step) {
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Step 2: 主語の変換（潜在意識のバグ体験）
+    function bug() {
+        let text = document.getElementById('anger').value.trim();
+        if (!text) text = "なんで私ばっかり大変なの！";
+        // 入力された言葉を自分自身に向けられた言葉として変換
+        document.getElementById('trans-text').innerText = "「私って、" + text + "」";
+        document.getElementById('bug-res').style.display = 'block';
+    }
+
+    // Step 3: 出し惜しみの呪い判定
+    function judge() {
+        const type = document.getElementById('money-type').value;
+        const emo = document.getElementById('emotion').value;
+        let msg = "";
+
+        if (type === 'free') {
+            msg = "素晴らしいです！まずはハードルの低い「無料の幸せ」から自分に許可を出してあげることが、現実創造の第一歩です。";
+        } else {
+            if (emo === 'guilt') {
+                msg = "お金が減る恐怖から、自分への愛情を出し惜しみしていますね。自分に払うお金は「自分への愛の証明」です。まずは小さな額から、気持ちよく送り出す練習をしましょう。";
+            } else {
+                msg = "最高です！「ありがとう」と気持ちよく送り出したお金やエネルギーは、豊かな現実となって必ずあなたに巡ってきます。その感覚を大切にしてください。";
+            }
+        }
+        document.getElementById('joy-msg').innerText = msg;
+        document.getElementById('joy-res').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
